@@ -10,8 +10,10 @@ let deltaX= 5;
 let deltaY= 5;
 let snakeWidth = 25;
 let snakeHeight = 25;
+let snakeLinks=1;
 let appleHit = false;
 const appleRadius = 20;
+let snakeLinkLocations = [[xCoordinate,yCoordinate]];
 let appleX, appleY;
 [appleX, appleY] = generateAppleLocation();
 let snakeCurrentPosition = {x1:xCoordinate,
@@ -40,22 +42,28 @@ function generateAppleLocation(){
 }
 
 function snakeMovement(){
-    if (currentDirection === "right"){
-        xCoordinate += deltaX;
-        return;
-    }
-    if (currentDirection === "up"){
-        yCoordinate -= deltaY;
-        return;
-    }
-    if (currentDirection === "left"){
-        xCoordinate -= deltaX;
-        return;
-    }
-    if (currentDirection === "down"){
-        yCoordinate += deltaY;
-        return;
-}
+        let x,y;
+        [x,y] = snakeLinkLocations[0];
+        if (currentDirection === "right") {
+            x += deltaX;
+            snakeLinkLocations[0][0]=x;
+            return;
+        }
+        if (currentDirection === "up") {
+            y -= deltaY;
+            snakeLinkLocations[0][1]=y;
+            return;
+        }
+        if (currentDirection === "left") {
+            x -= deltaX;
+            snakeLinkLocations[0][0]=x;
+            return;
+        }
+        if (currentDirection === "down") {
+            y += deltaY;
+            snakeLinkLocations[0][1]=y;
+            return;
+        }
 
 }
 function changeDirection(keyPress){
@@ -81,24 +89,51 @@ function changeDirection(keyPress){
     }
 }
 
+function addTail(){
+    if (currentDirection === "right") {
+            x += deltaX;
+            snakeLinkLocations[0][0]=x;
+            return;
+        }
+        if (currentDirection === "up") {
+            y -= deltaY;
+            snakeLinkLocations[0][1]=y;
+            return;
+        }
+        if (currentDirection === "left") {
+            x -= deltaX;
+            snakeLinkLocations[0][0]=x;
+            return;
+        }
+        if (currentDirection === "down") {
+            y += deltaY;
+            snakeLinkLocations[0][1]=y;
+            return;
+        }
+}
+
 function renderGameElements() {
 
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
     ctx.fillStyle = 'black';
     ctx.fillRect(0,0, canvas.width, canvas.height);
-    ctx.fillStyle = 'green';
-    ctx.fillRect(xCoordinate, yCoordinate, snakeWidth, snakeHeight);
-    if (appleHit){
-         [appleX,appleY] = generateAppleLocation();
-         ctx.arc(appleX,appleY ,appleRadius,Math.PI*2);
-         ctx.fillStyle ="red";
-         ctx.fill();
-    }else{
-        ctx.arc(appleX, appleY,appleRadius,0,Math.PI*2);
-        ctx.fillStyle ="red";
-        ctx.fill();
+    for (let i=0; i<snakeLinks;i++) {
+        let x, y;
+        [x,y] = snakeLinkLocations[0];
+        ctx.fillStyle = 'green';
+        ctx.fillRect(x, y, snakeWidth, snakeHeight);
     }
+    // if (appleHit){
+    //      [appleX,appleY] = generateAppleLocation();
+    //      ctx.arc(appleX,appleY ,appleRadius,Math.PI*2);
+    //      ctx.fillStyle ="red";
+    //      ctx.fill();
+    // }else{
+    //     ctx.arc(appleX, appleY,appleRadius,0,Math.PI*2);
+    //     ctx.fillStyle ="red";
+    //     ctx.fill();
+    // }
     ctx.closePath();
 }
 
