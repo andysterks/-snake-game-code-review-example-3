@@ -11,6 +11,8 @@ let deltaY= 5;
 let snakeWidth = 25;
 let snakeHeight = 25;
 let appleHit = false;
+let appleX, appleY;
+[appleX, appleY] = generateAppleLocation();
 let snakeCurrentPosition = {x1:xCoordinate,
                             x2:xCoordinate+snakeHeight,
                             y1:yCoordinate,
@@ -79,21 +81,23 @@ function changeDirection(keyPress){
 }
 
 function renderGameElements() {
+
     //ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
     ctx.fillStyle = 'black';
     ctx.fillRect(0,0, canvas.width, canvas.height);
     ctx.fillStyle = 'green';
     ctx.fillRect(xCoordinate, yCoordinate, snakeWidth, snakeHeight);
-    let appleX, appleY = generateAppleLocation();
     if (appleHit){
-
+         [appleX,appleY] = generateAppleLocation();
+         ctx.arc(appleX,appleY ,20,Math.PI*2);
+         ctx.fillStyle ="red";
+         ctx.fill();
     }else{
-
-    }
-      ctx.arc(20, 20,100,0,Math.PI*2);
+        ctx.arc(appleX, appleY,20,0,Math.PI*2);
         ctx.fillStyle ="red";
         ctx.fill();
+    }
     ctx.closePath();
 }
 
