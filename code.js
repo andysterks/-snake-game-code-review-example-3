@@ -10,9 +10,10 @@ let deltaX= 5;
 let deltaY= 5;
 setInterval(()=>{
     drawSnake();
-    movement();
+    snakeMovement();
     },100);
-function movement(){
+
+function snakeMovement(){
     if (currentDirection === "right"){
         xCoordinate += deltaX;
         return;
@@ -20,44 +21,38 @@ function movement(){
     if (currentDirection === "up"){
         yCoordinate -= deltaY;
         return;
+    }
+    if (currentDirection === "left"){
+        xCoordinate -= deltaX;
+        return;
+    }
+    if (currentDirection === "down"){
+        yCoordinate += deltaY;
+        return;
 }
 
 }
-function moveSnake(arrow){
-
-    let direction = arrow;
+function changeDirection(keyPress){
     const directionTranslation = { up:38,
                                  down:40,
                                  left:37,
                                  right:39
     }
-    // if (initialStart === true){
-    //     xCoordinate+=deltaX;
-    //     return;
-    // }
-    if (direction === directionTranslation["up"]){
-        yCoordinate -= deltaY;
+    if (keyPress === directionTranslation["up"]){
         currentDirection = "up";
-        initialStart=false;
+        return;}
+    if (keyPress === directionTranslation["down"]){
+        currentDirection="down";
         return;
     }
-    if (direction === directionTranslation["down"]){
-        yCoordinate += deltaY;
-        initialStart=false;
+    if (keyPress === directionTranslation["left"]){
+        currentDirection="left"
         return;
     }
-    if (direction === directionTranslation["left"]){
-        xCoordinate -= deltaX;
-        initialStart=false;
-        return;
-    }
-    if (direction === directionTranslation["right"]){
-        xCoordinate += deltaX;
+    if (keyPress === directionTranslation["right"]){
         currentDirection ="right"
-        initialStart=false;
         return;
     }
-
 }
 
 function drawSnake() {
@@ -72,6 +67,6 @@ function drawSnake() {
 
 document.addEventListener("keydown",(event)=>{
      let direction = event.which;
-    moveSnake(direction);
+     changeDirection(direction);
 })
 
