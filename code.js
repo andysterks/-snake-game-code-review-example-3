@@ -11,6 +11,7 @@ let deltaY= 5;
 let snakeWidth = 25;
 let snakeHeight = 25;
 let appleHit = false;
+const appleRadius = 20;
 let appleX, appleY;
 [appleX, appleY] = generateAppleLocation();
 let snakeCurrentPosition = {x1:xCoordinate,
@@ -90,11 +91,11 @@ function renderGameElements() {
     ctx.fillRect(xCoordinate, yCoordinate, snakeWidth, snakeHeight);
     if (appleHit){
          [appleX,appleY] = generateAppleLocation();
-         ctx.arc(appleX,appleY ,20,Math.PI*2);
+         ctx.arc(appleX,appleY ,appleRadius,Math.PI*2);
          ctx.fillStyle ="red";
          ctx.fill();
     }else{
-        ctx.arc(appleX, appleY,20,0,Math.PI*2);
+        ctx.arc(appleX, appleY,appleRadius,0,Math.PI*2);
         ctx.fillStyle ="red";
         ctx.fill();
     }
