@@ -9,10 +9,10 @@ let deltaX= 5;
 let deltaY= 5;
 let snakeWidth = 25;
 let snakeHeight = 25;
-let numberSnakeLinks=1;
+let numberSnakeLinks=3;
 let appleHit = false;
 const appleRadius = 20;
-let snakeLinkLocations = [[xCoordinate,yCoordinate]];
+let snakeLinkLocations = [[xCoordinate,yCoordinate],[xCoordinate-25,yCoordinate],[xCoordinate-50,yCoordinate]];
 let appleX, appleY;
 [appleX, appleY] = generateAppleLocation();
 let snakeCurrentPosition = {x1:xCoordinate,
@@ -45,22 +45,30 @@ function snakeMovement(){
         [x,y] = snakeLinkLocations[0];
         if (currentDirection === "right") {
             x += deltaX;
-            snakeLinkLocations[0][0]=x;
+            snakeLinkLocations.unshift([x,y]);
+            snakeLinkLocations.slice(-1,1);
+            //snakeLinkLocations[0][0]=x;
             return;
         }
         if (currentDirection === "up") {
             y -= deltaY;
-            snakeLinkLocations[0][1]=y;
+             snakeLinkLocations.unshift([x,y]);
+            snakeLinkLocations.slice(-1,1);
+            //snakeLinkLocations[0][1]=y;
             return;
         }
         if (currentDirection === "left") {
             x -= deltaX;
-            snakeLinkLocations[0][0]=x;
+             snakeLinkLocations.unshift([x,y]);
+            snakeLinkLocations.slice(-1,1);
+            //snakeLinkLocations[0][0]=x;
             return;
         }
         if (currentDirection === "down") {
             y += deltaY;
-            snakeLinkLocations[0][1]=y;
+             snakeLinkLocations.unshift([x,y]);
+            snakeLinkLocations.slice(-1,1);
+            //snakeLinkLocations[0][1]=y;
         }
 
 }
@@ -113,7 +121,7 @@ function renderGameElements() {
     ctx.fillRect(0,0, canvas.width, canvas.height);
     for (let i=0; i<numberSnakeLinks;i++) {
         let x, y;
-        [x,y] = snakeLinkLocations[0];
+        [x,y] = snakeLinkLocations[i];
         ctx.fillStyle = 'green';
         ctx.fillRect(x, y, snakeWidth, snakeHeight);
     }
