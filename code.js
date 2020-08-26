@@ -4,13 +4,12 @@ ctx.fillStyle = 'black';
 ctx.fillRect(0,0, canvas.width, canvas.height);
 let xCoordinate=50;
 let yCoordinate=400;
-let initialStart = true;
 let currentDirection= "right";
 let deltaX= 5;
 let deltaY= 5;
 let snakeWidth = 25;
 let snakeHeight = 25;
-let snakeLinks=1;
+let numberSnakeLinks=1;
 let appleHit = false;
 const appleRadius = 20;
 let snakeLinkLocations = [[xCoordinate,yCoordinate]];
@@ -62,7 +61,6 @@ function snakeMovement(){
         if (currentDirection === "down") {
             y += deltaY;
             snakeLinkLocations[0][1]=y;
-            return;
         }
 
 }
@@ -85,31 +83,26 @@ function changeDirection(keyPress){
     }
     if (keyPress === directionTranslation["right"]){
         currentDirection ="right"
-        return;
     }
 }
-
-function addTail(){
-    if (currentDirection === "right") {
-            x += deltaX;
-            snakeLinkLocations[0][0]=x;
-            return;
-        }
-        if (currentDirection === "up") {
-            y -= deltaY;
-            snakeLinkLocations[0][1]=y;
-            return;
-        }
-        if (currentDirection === "left") {
-            x -= deltaX;
-            snakeLinkLocations[0][0]=x;
-            return;
-        }
-        if (currentDirection === "down") {
-            y += deltaY;
-            snakeLinkLocations[0][1]=y;
-            return;
-        }
+function addTail() {
+    let x, y;
+    [x, y] = snakeLinkLocations[numberSnakeLinks-1];//look at this !!!!!!
+    switch (currentDirection) {
+        case "right":
+            x -= snakeWidth;
+            break;
+        case "up":
+            y = y + 2 * snakeHeight;
+            break;
+        case "left":
+            x = x - 2 * snakeWidth;
+            break;
+        case "down":
+            y -= snakeHeight;
+            break;
+    }
+     snakeLinkLocations.push([x, y]);
 }
 
 function renderGameElements() {
@@ -118,7 +111,7 @@ function renderGameElements() {
     ctx.beginPath();
     ctx.fillStyle = 'black';
     ctx.fillRect(0,0, canvas.width, canvas.height);
-    for (let i=0; i<snakeLinks;i++) {
+    for (let i=0; i<numberSnakeLinks;i++) {
         let x, y;
         [x,y] = snakeLinkLocations[0];
         ctx.fillStyle = 'green';
