@@ -6,8 +6,8 @@ let xCoordinate=50;
 let yCoordinate=400;
 let currentDirection= "right";
 let hitWall = false;
-let deltaX= 5;
-let deltaY= 5;
+let deltaX= 10;
+let deltaY= 10;
 let snakeWidth = 25;
 let snakeHeight = 25;
 let numberSnakeLinks=3;
@@ -24,28 +24,23 @@ let snakeCurrentPosition = {x1:xCoordinate,
 setInterval(()=>{
     renderGameElements();
     snakeMovement();
+    wallBoundaryDetection();
+    message();
+
     },100);
 
-function wallBoundaryDection(){
+function wallBoundaryDetection(){
     let snakeHead = snakeLinkLocations[0];
     let x,y;
     [x,y] = snakeHead;
-    switch(currentDirection){
-        case "right":
-            x =+ snakeWidth;
-            if (x >= canvas.width){hitWall = true;}
-            break;
-        case "left":
-            if (x<=0){hitwall = true;}
-            break;
-        case "up":
-            if (y <= 0){hitwall = true;}
-            break;
-        case "down":
-            y += snakeHeight;
-            if (y >=canvas.height){hitwall = true;}
-            break;
-    }
+    if (currentDirection==="right" && (x+snakeWidth >=canvas.width)){hitWall=true}
+    if (currentDirection==="left" && (x <=0)){hitWall=true}
+    if (currentDirection==="up" && (y <= 0)){hitWall=true}
+    if (currentDirection==="down" && (y+snakeHeight >=canvas.height)){hitWall=true}
+}
+
+function message(){
+    if (hitWall===true){console.log("hit the wall!");}
 }
 
 function generateAppleLocation(){
