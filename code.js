@@ -14,48 +14,47 @@ const snake = {
     length: 3,
     direction: "right"
 }
-const apple ={
+const apple = {
     x: undefined,
     y: undefined,
     hit: false,
     radius: 20
 }
 
-let xCoordinate=150;
-let yCoordinate=400;
-let currentDirection= "right";
-let hitWall = false;
-let deltaX= 10;
-let deltaY= 10;
-let snakeWidth = 25;
-let snakeHeight = 25;
-let numberSnakeLinks=3;
-let appleHit = false;
-const appleRadius = 20;
-let snakeLinkLocations = [[xCoordinate,yCoordinate],[xCoordinate-25,yCoordinate],[xCoordinate-50,yCoordinate]];
-let appleX, appleY;
-[appleX, appleY] = generateAppleLocation();
-let snakeCurrentPosition = {x1:xCoordinate,
-                            x2:xCoordinate+snakeHeight,
-                            y1:yCoordinate,
-                            y2:yCoordinate+snakeHeight
-}
+// let xCoordinate=150;
+// let yCoordinate=400;
+// let hitWall = false;
+// let deltaX= 10;
+// let deltaY= 10;
+// let snakeWidth = 25;
+// let snakeHeight = 25;
+// let numberSnakeLinks=3;
+// let appleHit = false;
+// const appleRadius = 20;
+// let snakeLinkLocations = [[xCoordinate,yCoordinate],[xCoordinate-25,yCoordinate],[xCoordinate-50,yCoordinate]];
+// let appleX, appleY;
+// [appleX, appleY] = generateAppleLocation();
+// let snakeCurrentPosition = {x1:xCoordinate,
+//                             x2:xCoordinate+snakeHeight,
+//                             y1:yCoordinate,
+//                             y2:yCoordinate+snakeHeight
+//}
 setInterval(()=>{
     renderGameElements();
     snakeMovement();
     wallBoundaryDetection();
-    message();
+    //message();
 
     },100);
 
 function wallBoundaryDetection(){
-    let snakeHead = snakeLinkLocations[0];
-    let x,y;
-    [x,y] = snakeHead;
-    if (currentDirection==="right" && (x+snakeWidth >=canvas.width)){hitWall=true}
-    if (currentDirection==="left" && (x <=0)){hitWall=true}
-    if (currentDirection==="up" && (y <= 0)){hitWall=true}
-    if (currentDirection==="down" && (y+snakeHeight >=canvas.height)){hitWall=true}
+    // let snakeHead = snakeLinkLocations[0];
+    // let x,y;
+    // [x,y] = snakeHead;
+    if (snake.direction==="right" && (snake.body[0].x + snake.width >= canvas.width)){hitWall=true}
+    if (snake.direction==="left" && (snake.body[0].x <=0)){hitWall=true}
+    if (snake.direction==="up" && (snake.body[0].y <= 0)){hitWall=true}
+    if (snake.direction==="down" && (snake.body[0].y + snake.height >= canvas.height)){hitWall=true}
 }
 
 function message(){
@@ -65,47 +64,44 @@ function message(){
 
 function generateAppleLocation(){
     // coordinates are in the center of the circle
-    let xCoordinateApple= Math.floor(Math.random() * (750-50+1)+50);
-    let yCoordinateApple=Math.floor(Math.random() * (750-50+1)+50);
+    apple.x = Math.floor(Math.random() * (750-50+1)+50);
+    apple.y = Math.floor(Math.random() * (750-50+1)+50);
     // while((snakeCurrentPosition["x1"]<xCoordinateApple<snakeCurrentPosition["x2"])&& (snakeCurrentPosition["y1"]<xCoordinateApple<snakeCurrentPosition["y2"])){
     //     let xCoordinateApple= Math.floor(Math.random() * (750-50+1)+50);
     //     let yCoordinateApple=Math.floor(Math.random() * (750-50+1)+50);
     //
     // }
     //ctx.beginPath();
-    return [xCoordinateApple,yCoordinateApple];
+    return;
 
     //ctx.closePath();
 }
 
 function snakeMovement(){
         let x,y;
-        [x,y] = snakeLinkLocations[0];
-        if (currentDirection === "right") {
-            x += deltaX;
-            snakeLinkLocations.unshift([x,y]);
-            snakeLinkLocations.slice(-1,1);
+        if (snake.direction === "right") {
+            x = snake.body[0].x + snake.speed.x;
+            snake.body.unshift({x:x,y:snake.body[0].y});
+            snake.body.splice(snake.length,1);
+            return;
+        }
+        if (snake.direction === "up") {
+            y = snake.body[0].y-snake.speed.y;
+            snake.body.unshift({x:snake.body[0].x,y:y});
+            snake.body.splice(snake.length,1);
+            return;
+        }
+        if (snake.direction === "left") {
+            x =snake.body[0].x - snake.speed.x;
+            snake.body.unshift({x:x,y:snake.body[0].y});
+            snake.body.splice(snake.length,1);
             //snakeLinkLocations[0][0]=x;
             return;
         }
-        if (currentDirection === "up") {
-            y -= deltaY;
-             snakeLinkLocations.unshift([x,y]);
-            snakeLinkLocations.slice(-1,1);
-            //snakeLinkLocations[0][1]=y;
-            return;
-        }
-        if (currentDirection === "left") {
-            x -= deltaX;
-             snakeLinkLocations.unshift([x,y]);
-            snakeLinkLocations.slice(-1,1);
-            //snakeLinkLocations[0][0]=x;
-            return;
-        }
-        if (currentDirection === "down") {
-            y += deltaY;
-             snakeLinkLocations.unshift([x,y]);
-            snakeLinkLocations.slice(-1,1);
+        if (snake.direction === "down") {
+            y = snake.body[0].y +snake.speed.y;
+            snake.body.unshift({x:snake.body[0].x, y:y});
+            snake.body.splice(snake.length,1);
             //snakeLinkLocations[0][1]=y;
         }
 
@@ -117,24 +113,24 @@ function changeDirection(keyPress){
                                  right:39
     }
     if (keyPress === directionTranslation["up"]){
-        currentDirection = "up";
+        snake.direction = "up";
         return;}
     if (keyPress === directionTranslation["down"]){
-        currentDirection="down";
+        snake.direction="down";
         return;
     }
     if (keyPress === directionTranslation["left"]){
-        currentDirection="left"
+        snake.direction="left"
         return;
     }
     if (keyPress === directionTranslation["right"]){
-        currentDirection ="right"
+        snake.direction ="right"
     }
 }
 function addTail() {
     let x, y;
     [x, y] = snakeLinkLocations[numberSnakeLinks-1];//look at this !!!!!!
-    switch (currentDirection) {
+    switch (snake.direction) {
         case "right":
             x -= snakeWidth;
             break;
@@ -158,11 +154,11 @@ function renderGameElements() {
     ctx.beginPath();
     ctx.fillStyle = 'black';
     ctx.fillRect(0,0, canvas.width, canvas.height);
-    for (let i=0; i<numberSnakeLinks;i++) {
-        let x, y;
-        [x,y] = snakeLinkLocations[i];
+    for (let i=0; i<snake.body.length;i++) {
+        // let x, y;
+        // [x,y] = snakeLinkLocations[i];
         ctx.fillStyle = 'green';
-        ctx.fillRect(x, y, snakeWidth, snakeHeight);
+        ctx.fillRect(snake.body[i].x, snake.body[i].y, snake.width, snake.height);
     }
     // if (appleHit){
     //      [appleX,appleY] = generateAppleLocation();
