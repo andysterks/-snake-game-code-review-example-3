@@ -111,6 +111,7 @@ function addTail() {
             break;
     }
      snakeLinkLocations.push([x, y]);
+     numberSnakeLinks+=1;
 }
 
 function renderGameElements() {
