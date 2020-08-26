@@ -5,6 +5,7 @@ ctx.fillRect(0,0, canvas.width, canvas.height);
 let xCoordinate=50;
 let yCoordinate=400;
 let currentDirection= "right";
+let hitWall = false;
 let deltaX= 5;
 let deltaY= 5;
 let snakeWidth = 25;
@@ -24,6 +25,28 @@ setInterval(()=>{
     renderGameElements();
     snakeMovement();
     },100);
+
+function wallBoundaryDection(){
+    let snakeHead = snakeLinkLocations[0];
+    let x,y;
+    [x,y] = snakeHead;
+    switch(currentDirection){
+        case "right":
+            x =+ snakeWidth;
+            if (x >= canvas.width){hitWall = true;}
+            break;
+        case "left":
+            if (x<=0){hitwall = true;}
+            break;
+        case "up":
+            if (y <= 0){hitwall = true;}
+            break;
+        case "down":
+            y += snakeHeight;
+            if (y >=canvas.height){hitwall = true;}
+            break;
+    }
+}
 
 function generateAppleLocation(){
     // coordinates are in the center of the circle
