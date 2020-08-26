@@ -2,7 +2,26 @@ const canvas = document.getElementById("snakeGameBoard");
 const ctx = canvas.getContext("2d");
 ctx.fillStyle = 'black';
 ctx.fillRect(0,0, canvas.width, canvas.height);
-let xCoordinate=50;
+const snake = {
+    width: 25,
+    height: 25,
+    body: [
+        {x:150,y:400},
+        {x:125, y:400},
+        {x:100,y:400}
+    ],
+    speed:{x:5,y:5},
+    length: 3,
+    direction: "right"
+}
+const apple ={
+    x: undefined,
+    y: undefined,
+    hit: false,
+    radius: 20
+}
+
+let xCoordinate=150;
 let yCoordinate=400;
 let currentDirection= "right";
 let hitWall = false;
@@ -41,6 +60,7 @@ function wallBoundaryDetection(){
 
 function message(){
     if (hitWall===true){console.log("hit the wall!");}
+    console.log(snake.body[0].x)
 }
 
 function generateAppleLocation(){
