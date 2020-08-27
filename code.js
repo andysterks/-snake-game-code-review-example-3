@@ -20,8 +20,6 @@ const apple = {
     y: 400,//canvas.height/2,
     hit: false,
     radius: 25,
-    pointsInApple:[]
-
 }
 
 // let xCoordinate=150;
@@ -65,9 +63,6 @@ function main(){
 }
 
 function wallBoundaryDetection(){
-    // let snakeHead = snakeLinkLocations[0];
-    // let x,y;
-    // [x,y] = snakeHead;
     if (snake.direction==="right" && (snake.body[0].x + snake.width >= canvas.width)){hitWall=true}
     if (snake.direction==="left" && (snake.body[0].x <=0)){hitWall=true}
     if (snake.direction==="up" && (snake.body[0].y <= 0)){hitWall=true}
@@ -108,22 +103,10 @@ function generateAppleLocation(){
         } while (loopStopper);
         apple.hit = false;
     }
-
-    //
-    // while((snakeCurrentPosition["x1"]<xCoordinateApple<snakeCurrentPosition["x2"])&& (snakeCurrentPosition["y1"]<xCoordinateApple<snakeCurrentPosition["y2"])){
-    //     let xCoordinateApple= Math.floor(Math.random() * (750-50+1)+50);
-    //     let yCoordinateApple=Math.floor(Math.random() * (750-50+1)+50);
-    //
-    // }
-    //ctx.beginPath();
-    return;
-
-    //ctx.closePath();
 }
 
 function playerHitApple() {
     let headX, headY;
-
     switch(snake.direction){
         case("right"):
             headX=snake.body[0].x + snake.width;
@@ -147,13 +130,9 @@ function playerHitApple() {
     if ((headX-apple.x)*(headX-apple.x)+ (headY-apple.y)*(headY-apple.y) <= apple.radius*apple.radius){
         apple.hit = true;
     }
-
-
 }
-
-
     // for (let i=0; i < 100001;i++){
-    //     apple.pointsInApple.push([Math.floor(Math.cos(Math.PI*2/100001*apple.x)),Math.floor(Math.sin(Math.PI*2/100001*apple.y))]);
+    //     apple.pointsonApple.push([Math.floor(Math.cos(Math.PI*2/100001*apple.x)),Math.floor(Math.sin(Math.PI*2/100001*apple.y))]);
     // }
     // let head = snake.body[0]
     // if (head.x >= apple.x-apple.radius && ((apple.y - apple.radius)<=head.y<=(apple.y-apple.radius))&&snake.direction==="right"){
@@ -261,10 +240,10 @@ function renderGameElements() {
         ctx.fillStyle = 'green';
         ctx.fillRect(snake.body[i].x, snake.body[i].y, snake.width, snake.height);
     }
-    // if (apple.hit ===true){
-    //     generateAppleLocation();
-    //     apple.hit=false;
-    // }
+    if (apple.hit ===true){
+        generateAppleLocation();
+        apple.hit=false;
+    }
     ctx.arc(apple.x,apple.y ,apple.radius,0,Math.PI*2);
     ctx.fillStyle ="red";
     ctx.fill();
