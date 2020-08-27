@@ -18,7 +18,7 @@ const apple = {
     x: undefined,
     y: undefined,
     hit: false,
-    radius: 20
+    radius: 25
 }
 
 // let xCoordinate=150;
@@ -61,11 +61,36 @@ function message(){
     if (hitWall===true){console.log("hit the wall!");}
     console.log(snake.body[0].x)
 }
+function appleOnSnake(){
+    let x1,y2;
+    let array = []
+    for (let i=0; i < snake.body.length; i++){
+        x1 =snake.body[i].x + snake.width;
+        y2=snake.body[i].y +snake.height;
+        array.push([x1,y2]);
+    }
+    for (let i=0; i < snake.body.length; i++){
+        for (let j=0; j<2; j++){
+            if ((snake.body[i][j] <= apple.x <=snake.body[i][j]) || snake.body[i][j] <= apple.y <=snake.body[i][j]){
+                return true;
+            }
 
+        }
+    }
+    return false;
+
+}
 function generateAppleLocation(){
     // coordinates are in the center of the circle
-    apple.x = Math.floor(Math.random() * (750-50+1)+50);
-    apple.y = Math.floor(Math.random() * (750-50+1)+50);
+    let loopStopper;
+    do{
+        apple.x = Math.floor(Math.random() * (775-apple.radius+1) + apple.radius);
+        apple.y = Math.floor(Math.random() * (775-apple.radius) + apple.radius);
+        loopStopper = appleOnSnake();
+    } while (loopStopper);
+
+
+    //
     // while((snakeCurrentPosition["x1"]<xCoordinateApple<snakeCurrentPosition["x2"])&& (snakeCurrentPosition["y1"]<xCoordinateApple<snakeCurrentPosition["y2"])){
     //     let xCoordinateApple= Math.floor(Math.random() * (750-50+1)+50);
     //     let yCoordinateApple=Math.floor(Math.random() * (750-50+1)+50);
@@ -128,20 +153,21 @@ function changeDirection(keyPress){
     }
 }
 function addTail() {
-    let x, y;
-    [x, y] = snakeLinkLocations[numberSnakeLinks-1];//look at this !!!!!!
-    switch (snake.direction) {
+    //fix
+    // let x, y;
+    // [x, y] = snakeLinkLocations[numberSnakeLinks-1];
+     switch (snake.direction) {
         case "right":
-            x -= snakeWidth;
+            x -= snake.width;
             break;
         case "up":
-            y = y + 2 * snakeHeight;
+            y = y + 2 * snake.height;
             break;
         case "left":
-            x = x - 2 * snakeWidth;
+            x = x - 2 * snake.width;
             break;
         case "down":
-            y -= snakeHeight;
+            y -= snake.height;
             break;
     }
      snakeLinkLocations.push([x, y]);
@@ -160,6 +186,11 @@ function renderGameElements() {
         ctx.fillStyle = 'green';
         ctx.fillRect(snake.body[i].x, snake.body[i].y, snake.width, snake.height);
     }
+    generateAppleLocation();
+    ctx.arc(apple.x,apple.y ,apple.radius,0,Math.PI*2);
+    ctx.fillStyle ="red";
+    ctx.fill();
+
     // if (appleHit){
     //      [appleX,appleY] = generateAppleLocation();
     //      ctx.arc(appleX,appleY ,appleRadius,Math.PI*2);
