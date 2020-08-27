@@ -1,7 +1,5 @@
 const canvas = document.getElementById("snakeGameBoard");
 const ctx = canvas.getContext("2d");
-ctx.fillStyle = 'black';
-ctx.fillRect(0,0, canvas.width, canvas.height);
 const snake = {
     width: 25,
     height: 25,
@@ -22,39 +20,15 @@ const apple = {
     radius: 25,
 }
 
-// let xCoordinate=150;
-// let yCoordinate=400;
-// let hitWall = false;
-// let deltaX= 10;
-// let deltaY= 10;
-// let snakeWidth = 25;
-// let snakeHeight = 25;
-// let numberSnakeLinks=3;
-// let appleHit = false;
-// const appleRadius = 20;
-// let snakeLinkLocations = [[xCoordinate,yCoordinate],[xCoordinate-25,yCoordinate],[xCoordinate-50,yCoordinate]];
-// let appleX, appleY;
-// [appleX, appleY] = generateAppleLocation();
-// let snakeCurrentPosition = {x1:xCoordinate,
-//                             x2:xCoordinate+snakeHeight,
-//                             y1:yCoordinate,
-//                             y2:yCoordinate+snakeHeight
-//}
-// setInterval(()=>{
-//     renderGameElements();
-//     snakeMovement();
-//     playerHitApple();
-
-//     wallBoundaryDetection();
-//     //message();
-//
-//     },100);
 main();
+
 function main(){
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0,0, canvas.width, canvas.height);
     setInterval(()=>{
     renderGameElements();
     snakeMovement();
-    playerHitApple();
+    snakeEatsApple();
     // generateAppleLocation();
     // wallBoundaryDetection();
     //message();
@@ -73,13 +47,55 @@ function message(){
     if (hitWall===true){console.log("hit the wall!");}
     console.log(snake.body[0].x)
 }
+function snakeHeadPosition(){
+    let headX,headY;
+    switch(snake.direction){
+        case("right"):
+            headX=snake.body[0].x + snake.width;
+            headY=snake.body[0].y + snake.height/2
+            break;
+        case("left"):
+            headX=snake.body[0].x;
+            headY=snake.body[0].y + snake.height/2;
+            break;
+        case("up"):
+            headX=snake.body[0].x +snake.width/2;
+            headY=snake.body[0].y;
+            break;
+        case("down"):
+            headX=snake.body[0].x + snake.width/2;
+            headY=snake.body[0].y;
+            break;
+    }
+    return [headX,headY];
+}
+function snakeHitsSnake(){
+    let headX, headY;
+    let x2,y2;
+    let array = []
+    [headX,headY] = snakeHeadPosition();
+    for (let i=0; i < snake.body.length; i++){
+        x2 =snake.body[i].x + snake.width;
+        y2=snake.body[i].y +snake.height;
+        array.push([x2,y2]);
+    }
+    for (let i=0; i < snake.body.length; i++){
+        for (let j=0; j<2; j++){
+            if ((snake.body[i][j] <= headX <=snake.body[i][j]) || snake.body[i][j] <= headY <=snake.body[i][j]){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 function appleOnSnake(){
-    let x1,y2;
+    let x2,y2;
     let array = []
     for (let i=0; i < snake.body.length; i++){
-        x1 =snake.body[i].x + snake.width;
+        x2 =snake.body[i].x + snake.width;
         y2=snake.body[i].y +snake.height;
-        array.push([x1,y2]);
+        array.push([x2,y2]);
     }
     for (let i=0; i < snake.body.length; i++){
         for (let j=0; j<2; j++){
@@ -94,18 +110,14 @@ function appleOnSnake(){
 }
 function generateAppleLocation(){
     // coordinates are in the center of the circle
-    if (apple.hit ===true) {
-        let loopStopper;
         do {
             apple.x = Math.floor(Math.random() * (775 - apple.radius + 1) + apple.radius);
             apple.y = Math.floor(Math.random() * (775 - apple.radius) + apple.radius);
-            loopStopper = appleOnSnake();
-        } while (loopStopper);
+        } while (appleOnSnake());
         apple.hit = false;
-    }
 }
 
-function playerHitApple() {
+function snakeEatsApple() {
     let headX, headY;
     switch(snake.direction){
         case("right"):
@@ -125,36 +137,10 @@ function playerHitApple() {
             headY=snake.body[0].y;
             break;
     }
-    console.log((headX-apple.x)*(headX-apple.x)+ (headY-apple.y)*(headY-apple.y));
-    console.log(apple.radius*apple.radius);
     if ((headX-apple.x)*(headX-apple.x)+ (headY-apple.y)*(headY-apple.y) <= apple.radius*apple.radius){
         apple.hit = true;
     }
 }
-    // for (let i=0; i < 100001;i++){
-    //     apple.pointsonApple.push([Math.floor(Math.cos(Math.PI*2/100001*apple.x)),Math.floor(Math.sin(Math.PI*2/100001*apple.y))]);
-    // }
-    // let head = snake.body[0]
-    // if (head.x >= apple.x-apple.radius && ((apple.y - apple.radius)<=head.y<=(apple.y-apple.radius))&&snake.direction==="right"){
-    //     apple.hit=true
-    //     return;
-    // }
-    // if (head.x <= apple.x+apple.radius && ((apple.y + apple.radius)<=head.y<=(apple.y-apple.radius))&&snake.direction==="left"){
-    //
-    //     apple.hit=true
-    //     return;
-    // }
-    // if (head.y <= apple.y+apple.radius && ((apple.x - apple.radius)<=head.x<=(apple.x+apple.radius))&&snake.direction==="up"){
-    //
-    //     apple.hit=true
-    //     return;
-    // }
-    // if (head.y >= apple.y-apple.radius && ((apple.x - apple.radius)<=head.x<=(apple.x+apple.radius))&&snake.direction==="down"){
-    //
-    //     apple.hit=true
-    //     return;
-    // }
-
 
 function snakeMovement(){
         let x,y;
@@ -174,17 +160,16 @@ function snakeMovement(){
             x =snake.body[0].x - snake.speed.x;
             snake.body.unshift({x:x,y:snake.body[0].y});
             snake.body.splice(snake.length,1);
-            //snakeLinkLocations[0][0]=x;
             return;
         }
         if (snake.direction === "down") {
             y = snake.body[0].y +snake.speed.y;
             snake.body.unshift({x:snake.body[0].x, y:y});
             snake.body.splice(snake.length,1);
-            //snakeLinkLocations[0][1]=y;
         }
 
 }
+
 function changeDirection(keyPress){
     const directionTranslation = { up:38,
                                  down:40,
@@ -206,37 +191,39 @@ function changeDirection(keyPress){
         snake.direction ="right"
     }
 }
-function addTail() {
+
+function addTail(){
+    let tailX=snake.body[snake.length-1].x;
+    let tailY=snake.body[snake.length-1].y;
+
+}
     //fix
     // let x, y;
     // [x, y] = snakeLinkLocations[numberSnakeLinks-1];
-     switch (snake.direction) {
-        case "right":
-            x -= snake.width;
-            break;
-        case "up":
-            y = y + 2 * snake.height;
-            break;
-        case "left":
-            x = x - 2 * snake.width;
-            break;
-        case "down":
-            y -= snake.height;
-            break;
-    }
-     snakeLinkLocations.push([x, y]);
-     numberSnakeLinks+=1;
-}
+//      switch (snake.direction) {
+//         case "right":
+//             x -= snake.width;
+//             break;
+//         case "up":
+//             y = y + 2 * snake.height;
+//             break;
+//         case "left":
+//             x = x - 2 * snake.width;
+//             break;
+//         case "down":
+//             y -= snake.height;
+//             break;
+//     }
+//      snakeLinkLocations.push([x, y]);
+//      numberSnakeLinks+=1;
+// }
 
-function renderGameElements() {
-
+function renderGameElements(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
     ctx.fillStyle = 'black';
     ctx.fillRect(0,0, canvas.width, canvas.height);
     for (let i=0; i<snake.body.length;i++) {
-        // let x, y;
-        // [x,y] = snakeLinkLocations[i];
         ctx.fillStyle = 'green';
         ctx.fillRect(snake.body[i].x, snake.body[i].y, snake.width, snake.height);
     }
@@ -247,17 +234,6 @@ function renderGameElements() {
     ctx.arc(apple.x,apple.y ,apple.radius,0,Math.PI*2);
     ctx.fillStyle ="red";
     ctx.fill();
-
-    // if (appleHit){
-    //      [appleX,appleY] = generateAppleLocation();
-    //      ctx.arc(appleX,appleY ,appleRadius,Math.PI*2);
-    //      ctx.fillStyle ="red";
-    //      ctx.fill();
-    // }else{
-    //     ctx.arc(appleX, appleY,appleRadius,0,Math.PI*2);
-    //     ctx.fillStyle ="red";
-    //     ctx.fill();
-    // }
     ctx.closePath();
 }
 
