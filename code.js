@@ -225,7 +225,7 @@ function addTail(){
     snake.length++;
 }
 function displayScore(){
-    div.textContent= `Score: ${snake.applesEaten}`
+    div.innerText= `Score: ${snake.applesEaten}`
     //ctx.font = "30px Veranda"
     //ctx.fillText(`Score:${snake.applesEaten}`,canvas.width,canvas.height)
 }
