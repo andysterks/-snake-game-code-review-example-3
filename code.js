@@ -25,11 +25,11 @@ const apple = {
 main();
 
 function main(){
-let loop = setInterval(() => {
+let gameLoop = setInterval(() => {
                 renderGameElements();
                 displayScore();
                 snakeMovement();
-                if (wallBoundaryDetection()||snakeEatsSnake()){clearInterval(loop)} //find better way to end game
+                if (wallBoundaryDetection()||snakeEatsSnake()){clearInterval(gameLoop)} //find better way to end game
                 snakeEatsApple();
                 if (apple.hit) {
                 addTail();
@@ -213,7 +213,7 @@ function addTail(){
     let tailX = snake.body[snake.length-1].x;
     let tailY = snake.body[snake.length-1].y;
     // is this necessary at high frame rates?
-    let array = [[tailX,tailY-snake.width],[tailY.x+snake.width,tailY],[tailX,tailY+snake.height],[tailX-snake.width,tailY]]
+    let array = [[tailX,tailY-snake.width],[tailX+snake.width,tailY],[tailX,tailY+snake.height],[tailX-snake.width,tailY]]
     for (let i = 0; i<4; i++){
         if ((array[i][0]||array[i][1]<0) || (array[i][0]||array[i][1]>800)){
             continue;
