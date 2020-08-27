@@ -15,10 +15,11 @@ const snake = {
     direction: "right"
 }
 const apple = {
-    x: undefined,
-    y: undefined,
+    x: canvas.width/2,
+    y: canvas.height/2,
     hit: false,
     radius: 25
+
 }
 
 // let xCoordinate=150;
@@ -42,6 +43,7 @@ const apple = {
 setInterval(()=>{
     renderGameElements();
     snakeMovement();
+    playerHitApple();
     wallBoundaryDetection();
     //message();
 
@@ -100,6 +102,12 @@ function generateAppleLocation(){
     return;
 
     //ctx.closePath();
+}
+function playerHitApple(){
+    let head = snake.body[0]
+    if (head.x >= apple.x-apple.radius && ((apple.y - apple.radius)<=head.y<=(apple.y-apple.radius))){
+        alert("you hit the apple");
+        apple.hit=true}
 }
 
 function snakeMovement(){
@@ -186,7 +194,10 @@ function renderGameElements() {
         ctx.fillStyle = 'green';
         ctx.fillRect(snake.body[i].x, snake.body[i].y, snake.width, snake.height);
     }
-    generateAppleLocation();
+    if (apple.hit ===true){
+        generateAppleLocation();
+        apple.hit=false;
+    }
     ctx.arc(apple.x,apple.y ,apple.radius,0,Math.PI*2);
     ctx.fillStyle ="red";
     ctx.fill();
