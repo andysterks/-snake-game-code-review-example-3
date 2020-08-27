@@ -36,7 +36,6 @@ let loop = setInterval(() => {
                 snake.applesEaten++;
                 }
 }, 100);
-    div.textContent="GAMEOVER"
 }
 
 function wallBoundaryDetection(){
