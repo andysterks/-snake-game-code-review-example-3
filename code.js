@@ -17,7 +17,7 @@ const apple = {
     x: 400,// canvas.width/2,
     y: 400,//canvas.height/2,
     hit: false,
-    radius: 10,
+    radius: 25,
 }
 
 main();
@@ -30,6 +30,7 @@ function main(){
     snakeMovement();
     snakeEatsApple();
     if (apple.hit){addTail()}
+    if (snakeEatsSnake()){alert("dead")}
     // generateAppleLocation();
     // wallBoundaryDetection();
     //message();
@@ -70,7 +71,7 @@ function snakeHeadPosition(){
     }
     return [headX,headY];
 }
-function snakeHitsSnake(){
+function snakeEatsSnake(){
     let headX, headY;
     let x2,y2;
     let array = []
@@ -194,9 +195,8 @@ function changeDirection(keyPress){
 }
 
 function addTail(){
-    let tailX=snake.body[snake.length-1].x;
-    let tailY=snake.body[snake.length-1].y;
-    let acceptableTailLocation;
+    let tailX = snake.body[snake.length-1].x;
+    let tailY = snake.body[snake.length-1].y;
     let array = [[tailX,tailY-25],[tailY.x+snake.width,tailY],[tailX,tailY+snake.height],[tailX-snake.width,tailY]]
     for (let i = 0; i<4; i++){
         if ((array[i][0]||array[i][1]<0) || (array[i][0]||array[i][1]>800)){
