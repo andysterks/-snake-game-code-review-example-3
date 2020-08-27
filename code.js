@@ -30,7 +30,7 @@ function main(){
     snakeMovement();
     snakeEatsApple();
     if (apple.hit){addTail()}
-    if (snakeEatsSnake()){alert("dead")}
+    console.log(snakeEatsSnake());
     // generateAppleLocation();
     // wallBoundaryDetection();
     //message();
@@ -73,27 +73,30 @@ function snakeHeadPosition(){
 }
 function snakeEatsSnake(){
     let headX, headY;
-    let x2,y2;
-    let array = []
+    let x1,x2,y1,y2;
+    let array = [];
     [headX,headY] = snakeHeadPosition();
     for (let i=0; i < snake.body.length; i++){
         x2 =snake.body[i].x + snake.width;
         y2=snake.body[i].y +snake.height;
         array.push([x2,y2]);
     }
-    for (let i=0; i < snake.body.length; i++){
-        for (let j=0; j<2; j++){
-            if ((snake.body[i][j] <= headX <=snake.body[i][j]) || snake.body[i][j] <= headY <=snake.body[i][j]){
-                return true;
-            }
+    for (let i=1; i < snake.body.length; i++) {
+        x1 = snake.body[i].x;
+        x2 = array[i][0];
+        y1 = snake.body[i].y;
+        y2 = array[i][1];
+        if (((x1 <= headX)&& (headX <= x2)) && ((y1 <= headY) && (headY<= y2))){
+            return true;
         }
+
     }
     return false;
 }
 
 function appleOnSnake(){
     let x2,y2;
-    let array = []
+    let array = [];
     for (let i=0; i < snake.body.length; i++){
         x2 =snake.body[i].x + snake.width;
         y2=snake.body[i].y +snake.height;
@@ -101,7 +104,7 @@ function appleOnSnake(){
     }
     for (let i=0; i < snake.body.length; i++){
         for (let j=0; j<2; j++){
-            if ((snake.body[i][j] <= apple.x <=snake.body[i][j]) || snake.body[i][j] <= apple.y <=snake.body[i][j]){
+            if ((snake.body[i][j] <= apple.x <=snake.body[i][j]) || (snake.body[i][j] <= apple.y <=snake.body[i][j])){
                 return true;
             }
 
