@@ -1,48 +1,51 @@
 const canvas = document.getElementById("snakeGameBoard");
 const ctx = canvas.getContext("2d");
+const div = document.querySelector("div");
 const snake = {
-    width: 25,
-    height: 25,
+    width: 8,
+    height: 8,
     body: [
         {x:150,y:400},
         {x:125, y:400},
         {x:100,y:400}
     ],
-    speed:{x:15,y:15},
+    speed:{x:10,y:10},
     length: 3,
-    direction: "right"
+    direction: "right",
+    applesEaten:0
 
 }
 const apple = {
-    x: 400,// canvas.width/2,
-    y: 400,//canvas.height/2,
+    x: canvas.width/2,
+    y: canvas.height/2,
     hit: false,
-    radius: 25,
+    radius: 15,
 }
 
 main();
 
 function main(){
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0,0, canvas.width, canvas.height);
-    setInterval(()=>{
-    renderGameElements();
-    snakeMovement();
-    snakeEatsApple();
-    if (apple.hit){addTail()}
-    console.log(snakeEatsSnake());
-    // generateAppleLocation();
-    // wallBoundaryDetection();
-    //message();
-
-    },100);
+let loop = setInterval(() => {
+                renderGameElements();
+                displayScore();
+                snakeMovement();
+                if (wallBoundaryDetection()||snakeEatsSnake()){clearInterval(loop)} //find better way to end game
+                snakeEatsApple();
+                if (apple.hit) {
+                addTail();
+                snake.applesEaten++;
+                }
+}, 100);
+    div.textContent="GAMEOVER"
 }
 
 function wallBoundaryDetection(){
-    if (snake.direction==="right" && (snake.body[0].x + snake.width >= canvas.width)){hitWall=true}
-    if (snake.direction==="left" && (snake.body[0].x <=0)){hitWall=true}
-    if (snake.direction==="up" && (snake.body[0].y <= 0)){hitWall=true}
-    if (snake.direction==="down" && (snake.body[0].y + snake.height >= canvas.height)){hitWall=true}
+    //snake head edge changes based on the direction its heading
+    if (snake.direction==="right" && (snake.body[0].x + snake.width > canvas.width)){return true}
+    if (snake.direction==="left" && (snake.body[0].x < 0)){return true}
+    if (snake.direction==="up" && (snake.body[0].y < 0)){return true}
+    if (snake.direction==="down" && (snake.body[0].y + snake.height > canvas.height)){return true}
+    return false;
 }
 
 function message(){
@@ -71,6 +74,7 @@ function snakeHeadPosition(){
     }
     return [headX,headY];
 }
+
 function snakeEatsSnake(){
     let headX, headY;
     let x1,x2,y1,y2;
@@ -86,7 +90,7 @@ function snakeEatsSnake(){
         x2 = array[i][0];
         y1 = snake.body[i].y;
         y2 = array[i][1];
-        if (((x1 <= headX)&& (headX <= x2)) && ((y1 <= headY) && (headY<= y2))){
+        if (((x1 <= headX) && (headX <= x2)) && ((y1 <= headY) && (headY<= y2))){
             return true;
         }
 
@@ -95,26 +99,33 @@ function snakeEatsSnake(){
 }
 
 function appleOnSnake(){
-    let x2,y2;
-    let array = [];
+    let x1,x2,y1,y2;
+    let X1,X2,Y1,Y2;
+    let arrayX1Y1 = [];
+    let arrayX2Y2= [];
     for (let i=0; i < snake.body.length; i++){
-        x2 =snake.body[i].x + snake.width;
-        y2=snake.body[i].y +snake.height;
-        array.push([x2,y2]);
+        x1 = snake.body[i].x - snake.width;
+        y1 = snake.body[i].y - snake.height;
+        arrayX1Y1.push([x1,y1]);
     }
     for (let i=0; i < snake.body.length; i++){
-        for (let j=0; j<2; j++){
-            if ((snake.body[i][j] <= apple.x <=snake.body[i][j]) || (snake.body[i][j] <= apple.y <=snake.body[i][j])){
-                return true;
-            }
-
+        x2 = snake.body[i].x + snake.width*2;
+        y2= snake.body[i].y +snake.height*2;
+        arrayX2Y2.push([x2,y2]);
+    }
+    for (let i=0; i < snake.body.length; i++) {
+        X1 = arrayX1Y1[i][0];
+        X2 = arrayX2Y2[i][0];
+        Y1 = arrayX1Y1[i][1];
+        Y2 = arrayX2Y2[i][1];
+        if (((X1 <= apple.x) && (apple.x <= X2)) && ((Y1 <= apple.y) && (apple.y<= Y2))){
+            return true;
         }
+
     }
     return false;
-
 }
 function generateAppleLocation(){
-    // coordinates are in the center of the circle
         do {
             apple.x = Math.floor(Math.random() * (775 - apple.radius + 1) + apple.radius);
             apple.y = Math.floor(Math.random() * (775 - apple.radius) + apple.radius);
@@ -123,6 +134,8 @@ function generateAppleLocation(){
 }
 
 function snakeEatsApple() {
+    // make the detection more fine grained by adding additional contact points on the head or think of another solution
+    // for example making the snake really really skinny
     let headX, headY;
     switch(snake.direction){
         case("right"):
@@ -200,7 +213,8 @@ function changeDirection(keyPress){
 function addTail(){
     let tailX = snake.body[snake.length-1].x;
     let tailY = snake.body[snake.length-1].y;
-    let array = [[tailX,tailY-25],[tailY.x+snake.width,tailY],[tailX,tailY+snake.height],[tailX-snake.width,tailY]]
+    // is this necessary at high frame rates?
+    let array = [[tailX,tailY-snake.width],[tailY.x+snake.width,tailY],[tailX,tailY+snake.height],[tailX-snake.width,tailY]]
     for (let i = 0; i<4; i++){
         if ((array[i][0]||array[i][1]<0) || (array[i][0]||array[i][1]>800)){
             continue;
@@ -211,27 +225,11 @@ function addTail(){
     }
     snake.length++;
 }
-    //fix
-    // let x, y;
-    // [x, y] = snakeLinkLocations[numberSnakeLinks-1];
-//      switch (snake.direction) {
-//         case "right":
-//             x -= snake.width;
-//             break;
-//         case "up":
-//             y = y + 2 * snake.height;
-//             break;
-//         case "left":
-//             x = x - 2 * snake.width;
-//             break;
-//         case "down":
-//             y -= snake.height;
-//             break;
-//     }
-//      snakeLinkLocations.push([x, y]);
-//      numberSnakeLinks+=1;
-// }
-
+function displayScore(){
+    div.textContent= `Score: ${snake.applesEaten}`
+    //ctx.font = "30px Veranda"
+    //ctx.fillText(`Score:${snake.applesEaten}`,canvas.width,canvas.height)
+}
 function renderGameElements(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
