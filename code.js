@@ -135,7 +135,6 @@ function generateAppleLocation(){
 function snakeEatsApple() {
     // make the detection more fine grained by adding additional contact points on the head or think of another solution
     // for example making the snake really really skinny
-
     let headX, headY;
     [headX,headY] = snakeHeadPosition();
     if ((headX-apple.x)**2+ (headY-apple.y)**2 <= apple.radius**2){
