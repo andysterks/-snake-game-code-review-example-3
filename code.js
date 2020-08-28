@@ -123,7 +123,7 @@ function appleOnSnake(){
 function generateAppleLocation(){
         do {
             apple.x = Math.floor(Math.random() * (775 - apple.radius + 1) + apple.radius);
-            apple.y = Math.floor(Math.random() * (775 - apple.radius) + apple.radius);
+            apple.y = Math.floor(Math.random() * (775 - apple.radius + 1) + apple.radius);
         } while (appleOnSnake());
         apple.hit = false;
 }
@@ -208,6 +208,7 @@ function displayScore(){
     //ctx.font = "30px Veranda"
     //ctx.fillText(`Score:${snake.applesEaten}`,canvas.width,canvas.height)
 }
+
 function renderGameElements(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
