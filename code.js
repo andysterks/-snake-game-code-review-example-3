@@ -135,25 +135,9 @@ function generateAppleLocation(){
 function snakeEatsApple() {
     // make the detection more fine grained by adding additional contact points on the head or think of another solution
     // for example making the snake really really skinny
+
     let headX, headY;
-    switch(snake.direction){
-        case("right"):
-            headX=snake.body[0].x + snake.width;
-            headY=snake.body[0].y + snake.height/2
-            break;
-        case("left"):
-            headX=snake.body[0].x;
-            headY=snake.body[0].y + snake.height/2;
-            break;
-        case("up"):
-            headX=snake.body[0].x +snake.width/2;
-            headY=snake.body[0].y;
-            break;
-        case("down"):
-            headX=snake.body[0].x + snake.width/2;
-            headY=snake.body[0].y;
-            break;
-    }
+    [headX,headY] = snakeHeadPosition();
     if ((headX-apple.x)**2+ (headY-apple.y)**2 <= apple.radius**2){
         apple.hit = true;
     }
