@@ -47,10 +47,6 @@ function wallBoundaryDetection(){
     return false;
 }
 
-function message(){
-    if (hitWall===true){console.log("hit the wall!");}
-    console.log(snake.body[0].x)
-}
 function snakeHeadPosition(){
     let headX,headY;
     switch(snake.direction){
