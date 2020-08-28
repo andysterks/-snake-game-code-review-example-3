@@ -25,7 +25,7 @@ const apple = {
 main();
 
 function main(){
-let gameLoop = setInterval(() => {
+    let gameLoop = setInterval(() => {
                 renderGameElements();
                 displayScore();
                 snakeMovement();
@@ -35,7 +35,7 @@ let gameLoop = setInterval(() => {
                 addTail();
                 snake.applesEaten++;
                 }
-}, 100);
+                }, 100);
 }
 
 function wallBoundaryDetection(){
